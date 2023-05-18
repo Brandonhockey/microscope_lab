@@ -1,0 +1,55 @@
+<html>
+<head>
+    <title>Microscopes</title>
+
+</head>
+<body>
+    <header>
+        <h1>Microscopes</h1>
+    </header>
+    
+    <nav>
+        <ul>
+            <li><a href="#overview">Overview</a></li>
+            <li><a href="#types">Types</a></li>
+            <li><a href="#usage">Usage</a></li>
+            <li><a href="#advantages">Advantages</a></li>
+        </ul>
+    </nav>
+    
+    <main>
+        <section id="overview">
+            <h2>Overview</h2>
+            <p>A microscope is an instrument used to observe and magnify small objects or organisms that are not visible to the naked eye. It consists of various optical components that work together to provide a detailed view of the specimen.</p>
+        </section>
+        
+        <section id="types">
+            <h2>Types</h2>
+            <ul>
+                <li>Compound Microscope</li>
+                <li>Stereomicroscope</li>
+                <li>Electron Microscope</li>
+            </ul>
+        </section>
+        
+        <section id="usage">
+            <h2>Usage</h2>
+            <p>Microscopes are widely used in scientific research, education, healthcare, and various industries. They enable scientists, doctors, and students to study the intricate details of cells, tissues, microorganisms, and other microscopic structures.</p>
+        </section>
+        
+        <section id="advantages">
+            <h2>Advantages</h2>
+            <ul>
+                <li>Enables visualization of small objects</li>
+                <li>Provides high magnification and resolution</li>
+                <li>Allows for detailed examination of specimens</li>
+                <li>Aids in scientific discoveries and advancements</li>
+            </ul>
+        </section>
+    </main>
+    
+    <footer>
+        <p>&copy; 2023 Microscope Website. All rights reserved.</p>
+    </footer>
+</body>
+</html>
