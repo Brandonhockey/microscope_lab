@@ -1,0 +1,10 @@
+import numpy as np
+import matplotlib.pyplot as plt
+points = 10
+data = np.random.rand(points, 2)
+data
+data = np.random.rand(3, 3)
+data
+np.random.rand(3,3)
+
+plt. imshow(data,cmap="gray")
