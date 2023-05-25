@@ -1,0 +1,63 @@
+# Aquaponics System Control
+
+This is a simple web application that allows you to control an aquaponics system. It provides a user interface to toggle various components of the system and view system parameters such as water level, temperature, and pH level.
+
+## Installation
+
+1. Clone the repository or download the source code.
+2. Install the required dependencies by running the following command:
+   ```
+   pip install microdot pandas
+   ```
+
+## Usage
+
+1. Prepare a CSV file named `state.csv` to store the system state.
+   - The CSV file should have the following columns: `water_pump`, `air_pump`, `light`, `water_level`, `temperature`, and `pH_level`.
+   - You can initialize the CSV file with default values or leave it empty, and the program will create it if it doesn't exist.
+
+2. Run the `app.py` file:
+   ```
+   python app.py
+   ```
+
+3. Open a web browser and navigate to `http://localhost:8008`.
+   - You will see the aquaponics system control interface displaying the current state and parameters.
+
+4. Use the provided buttons to toggle the components ON or OFF:
+   - Water Pump
+   - Air Pump
+   - Light
+
+5. You can also set the system parameters manually by modifying the input fields:
+   - Water Level
+   - Temperature
+   - pH Level
+
+6. The system state and parameters will be saved to the `state.csv` file automatically.
+
+## Technologies Used
+
+- Python
+- microdot - a micro web framework for Python.
+- pandas - a library for data manipulation and analysis in Python.
+
+## CSV File Format
+
+The `state.csv` file stores the system state and parameters. It should have the following columns:
+
+- `water_pump` - represents the status of the water pump ('ON' or 'OFF').
+- `air_pump` - represents the status of the air pump ('ON' or 'OFF').
+- `light` - represents the status of the light ('ON' or 'OFF').
+- `water_level` - represents the water level in the system.
+- `temperature` - represents the temperature of the system.
+- `pH_level` - represents the pH level of the system.
+
+## License
+
+This project is licensed under the [MIT License](LICENSE).
+```
+
+Feel free to modify the content of the `README.md` file to suit your specific needs. You can add more sections, provide additional information, or customize it according to your project requirements.
+
+Remember to update the `LICENSE` file with the appropriate license information for your project, or remove the "License" section from the `README.md` file if it's not applicable.
