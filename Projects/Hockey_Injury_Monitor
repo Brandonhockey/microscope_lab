@@ -1,0 +1,82 @@
+from microdot import Microdot, Response
+import json
+
+app = Microdot()
+Response.default_content_type = 'text/html'
+
+injuries = []
+
+@app.route('/')
+def index(request):
+    injury_count = len(injuries)
+    injury_count_html = f"<p>Total Injuries: {injury_count}</p>"
+
+    search_form = """
+    <h2>Search Injuries</h2>
+    <form method="get" action="/search">
+        <label for="search_query">Search:</label>
+        <input type="text" id="search_query" name="search_query" required>
+        <button type="submit">Search</button>
+    </form>
+    """
+
+    delete_buttons = ''.join(f"<button type='submit' form='delete_form_{i}'>Delete</button>" for i, _ in enumerate(injuries))
+    delete_forms = ''.join(f"<form id='delete_form_{i}' method='post' action='/delete_injury'>{get_hidden_input('injury_index', i)}</form>" for i, _ in enumerate(injuries))
+
+    return """
+    <h1>Hockey Injury Monitor</h1>
+    <h2>Add Injury</h2>
+    <form method="post" action="/add_injury">
+        <label for="player_name">Player Name:</label>
+        <input type="text" id="player_name" name="player_name" required><br><br>
+        <label for="injury_description">Injury Description:</label>
+        <input type="text" id="injury_description" name="injury_description" required><br><br>
+        <button type="submit">Submit</button>
+    </form>
+    <h2>Injury List</h2>
+    {injury_count_html}
+    {search_form}
+    <ul>
+        {injury_list}
+    </ul>
+    {delete_buttons}
+    {delete_forms}
+    """.format(
+        injury_count_html=injury_count_html,
+        search_form=search_form,
+        injury_list=get_injury_list(),
+        delete_buttons=delete_buttons,
+        delete_forms=delete_forms
+    )
+
+@app.route('/add_injury', methods=['POST'])
+def add_injury(request):
+    player_name = request.form.get('player_name')
+    injury_description = request.form.get('injury_description')
+    injuries.append({'player_name': player_name, 'injury_description': injury_description})
+    return Response(json.dumps({'message': 'Injury added successfully.'}), status=201)
+
+@app.route('/search')
+def search(request):
+    search_query = request.args.get('search_query', '')
+    search_results = [injury for injury in injuries if search_query.lower() in injury['player_name'].lower() or search_query.lower() in injury['injury_description'].lower()]
+    return """
+    <h1>Hockey Injury Monitor - Search Results</h1>
+    <h2>Search Query: {query}</h2>
+    <ul>
+        {result_list}
+    </ul>
+    """.format(query=search_query, result_list=get_search_result_list(search_results))
+
+@app.route('/delete_injury', methods=['POST'])
+def delete_injury(request):
+    injury_index = int(request.form.get('injury_index'))
+    del injuries[injury_index]
+    return Response(json.dumps({'message': 'Injury deleted successfully.'}), status=200)
+
+def get_injury_list():
+    if injuries:
+        return ''.join(f"<li>{injury['player_name']}: {injury['injury_description']}</li>" for injury in injuries)
+      
+
+app.run(debug=True, port=8008)
