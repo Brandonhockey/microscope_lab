@@ -1,0 +1,108 @@
+'''''
+import cv2
+import torchvision.transforms as transforms
+from PIL import Image, ImageChops
+import numpy as np
+import matplotlib.pyplot as plt
+import torch
+
+# Open the camera
+cap = cv2.VideoCapture(0)
+
+# Capture an image
+ret, frame = cap.read()
+
+# Release the camera
+cap.release()
+
+# Save the image as a file
+cv2.imwrite('image.jpg', frame)
+
+# Load the image
+image_path = 'image.jpg'
+image = Image.open(image_path)
+
+# Convert the PIL image to a numpy array
+image_np = np.array(image)
+
+# Apply a filter to the image (e.g., using a Gaussian blur)
+filtered_np_image = cv2.GaussianBlur(image_np, (5, 5), 0)
+
+# Convert the filtered image back to PIL format
+filtered_pil_image = Image.fromarray(filtered_np_image)
+
+# Calculate the difference image
+difference_image = ImageChops.difference(image, filtered_pil_image)
+
+# Convert the difference image to grayscale
+difference_image = difference_image.convert('L')
+
+# Display images side by side
+fig, axs = plt.subplots(1, 3)
+axs[0].imshow(image)
+axs[0].set_title('Original Image')
+axs[0].axis('off')
+
+axs[1].imshow(filtered_pil_image)
+axs[1].set_title('Filtered Image')
+axs[1].axis('off')
+
+axs[2].imshow(difference_image)
+axs[2].set_title('Difference Image')
+axs[2].axis('off')
+
+plt.show()
+'''''
+import cv2
+import torchvision.transforms as transforms
+from PIL import Image, ImageChops
+import numpy as np
+import matplotlib.pyplot as plt
+import torch
+
+# Open the camera
+cap = cv2.VideoCapture(0)
+
+# Capture an image
+ret, frame = cap.read()
+
+# Release the camera
+cap.release()
+
+# Save the image as a file
+cv2.imwrite('image.jpg', frame)
+
+# Load the image
+image_path = 'image.jpg'
+image = Image.open(image_path)
+
+# Convert the PIL image to a numpy array
+image_np = np.array(image)
+
+# Apply a filter to the image (e.g., using a Gaussian blur)
+filtered_np_image = cv2.GaussianBlur(image_np, (5, 5), 0)
+
+# Convert the filtered image back to PIL format
+filtered_pil_image = Image.fromarray(filtered_np_image)
+
+# Calculate the difference image
+difference_image = ImageChops.difference(image, filtered_pil_image)
+
+# Convert the difference image to grayscale
+difference_image = difference_image.convert('L')
+
+# Display images side by side
+fig, axs = plt.subplots(1, 3)
+axs[0].imshow(image)
+axs[0].set_title('Original Image')
+axs[0].axis('off')
+
+axs[1].imshow(filtered_pil_image)
+axs[1].set_title('Filtered Image')
+axs[1].axis('off')
+
+axs[2].imshow(difference_image, cmap='hot')  # Use 'hot' colormap for difference image
+axs[2].set_title('Difference Image')
+axs[2].axis('off')
+
+plt.show()
