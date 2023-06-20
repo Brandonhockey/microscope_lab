@@ -1,0 +1,202 @@
+import yaml
+import urllib.parse
+import matplotlib.pyplot as plt
+from io import BytesIO
+import base64
+import numpy as np
+from flask import Flask, request, render_template
+
+# Define procedures as functions
+def cpr_procedure():
+    return "Perform CPR by giving chest compressions and rescue breaths."
+
+def heimlich_maneuver():
+    return "Perform the Heimlich maneuver to clear the airway obstruction."
+
+def stroke_procedure():
+    print("terminal message")
+    return "Take the person to the hospital immediately for medical treatment."
+
+# Define the nested dictionary
+emergency_procedures = '''
+Bleeding:
+  question: Is the bleeding severe?
+  responses:
+    'No': Clean the wound with soap and water. Apply an antibiotic ointment and a
+      sterile bandage.
+    'Yes': Apply direct pressure to the wound. Elevate the injured area above the
+      heart if possible. Call for medical help if necessary.
+Burns:
+  question: What is the severity of the burn?
+  responses:
+    First-degree: Cool the burn with cool (not cold) water for several minutes. Apply
+      an antibiotic ointment and a sterile bandage.
+    Second-degree: Cool the burn with cool (not cold) water for several minutes. Cover
+      the burn with a sterile bandage or clean cloth. Call for medical help if necessary.
+    Third-degree:
+      question: Are there any additional injuries?
+      responses:
+        'No': Call for medical help immediately. Cover the burn with a sterile bandage
+          or clean cloth. Do not apply any ointments or creams to the burn.
+        'Yes': Call for medical help immediately. Cover the burn with a sterile bandage
+          or clean cloth. Do not apply any ointments or creams to the burn.
+Cardiac arrest:
+  question: Has the person lost consciousness and not breathing?
+  responses:
+    'No': Monitor the person and keep them calm. Call for medical help if necessary.
+    'Yes': $cpr_procedure
+Choking:
+  question: Is the person able to speak or cough?
+  responses:
+    'No': $heimlich_maneuver
+    'Yes': Encourage them to keep coughing to try and dislodge the object. Call for
+      medical help if necessary.
+Fracture:
+  question: Is the fracture open or closed?
+  responses:
+    Closed: Immobilize the injured area if possible. Apply ice to limit swelling and
+      help relieve pain until medical help arrives.
+    Open: Do not attempt to realign the bone or push a bone that's sticking out back
+      in. Call for medical help immediately.
+Stroke:
+  question: Does the person show signs of stroke, like facial drooping, arm weakness,
+    or speech difficulties?
+  responses:
+    'No': Monitor the person and keep them calm. Call for medical help if necessary.
+    'Yes': $stroke_procedure
+'''
+
+# Convert YAML to dictionary
+emergency_procedures = yaml.safe_load(emergency_procedures)
+
+app = Flask(__name__)
+
+# Helper functions
+def generate_histogram(data):
+    plt.hist(data.flatten(), bins=50)
+    plt.xlabel('Pixel Value')
+    plt.ylabel('Frequency')
+    plt.title('Histogram')
+    plt.grid(True)
+    image_stream = BytesIO()
+    plt.savefig(image_stream, format='png')
+    plt.close()
+    image_stream.seek(0)
+    encoded_image = base64.b64encode(image_stream.getvalue()).decode('utf-8')
+    return f'<img src="data:image/png;base64,{encoded_image}" />'
+
+def generate_image_preview(data):
+    plt.imshow(data)
+    plt.axis('off')
+    image_stream = BytesIO()
+    plt.savefig(image_stream, format='png')
+    plt.close()
+    image_stream.seek(0)
+    encoded_image = base64.b64encode(image_stream.getvalue()).decode('utf-8')
+    return f'<img src="data:image/png;base64,{encoded_image}" />'
+
+def generate_montage(data, labels):
+    num_images = data.shape[0]
+    rows = int(np.sqrt(num_images))
+    cols = int(np.ceil(num_images / rows))
+    montage = np.zeros((rows * data.shape[1], cols * data.shape[2], data.shape[3]), dtype=np.uint8)
+    for i in range(num_images):
+        r = i // cols
+        c = i % cols
+        montage[r * data.shape[1] : (r + 1) * data.shape[1], c * data.shape[2] : (c + 1) * data.shape[2], :] = data[i]
+    return generate_image_preview(montage)
+
+# Define routes
+@app.route('/')
+def index():
+    return '''
+        <h1>Medical Specialist AI Agent</h1>
+        <p>Use the following routes to access different features:</p>
+        <ul>
+            <li><a href="/dataset">Load Dataset</a></li>
+            <li><a href="/preview">Preview Image Data</a></li>
+            <li><a href="/histogram">Generate Histogram</a></li>
+            <li><a href="/rgb_channels">View RGB Color Channels</a></li>
+            <li><a href="/train">Train Neural Network</a></li>
+            <li><a href="/save">Save Model</a></li>
+            <li><a href="/load">Load Model</a></li>
+            <li><a href="/test">Test Neural Network</a></li>
+            <li><a href="/plots">Show Training and Testing Accuracy Plots</a></li>
+            <li><a href="/follow_up">Expert System Q/A for Patient Follow-up</a></li>
+        </ul>
+    '''
+
+@app.route('/dataset')
+def load_dataset():
+    # Load dataset code goes here
+    return 'Dataset loaded successfully.'
+
+@app.route('/preview')
+def preview_image_data():
+    # Preview single image code goes here
+    single_image_html = generate_image_preview(np.zeros((32, 32, 3), dtype=np.uint8))
+    # Preview montage code goes here
+    montage_html = generate_montage(np.zeros((16, 32, 32, 3), dtype=np.uint8), [])
+    return f'''
+        <h1>Preview Image Data</h1>
+        <h2>Single Image:</h2>
+        {single_image_html}
+        <h2>Montage:</h2>
+        {montage_html}
+    '''
+
+@app.route('/histogram')
+def generate_dataset_histogram():
+    # Generate histogram code goes here
+    histogram_html = generate_histogram(np.random.randint(0, 256, size=(1000, 32, 32, 3), dtype=np.uint8))
+    return f'''
+        <h1>Generate Dataset Histogram</h1>
+        {histogram_html}
+    '''
+
+@app.route('/rgb_channels')
+def view_rgb_channels():
+    # View RGB color channels code goes here
+    return '''
+        <h1>View RGB Color Channels</h1>
+        <p>Code to view RGB color channels goes here.</p>
+    '''
+
+@app.route('/train')
+def train_neural_network():
+    # Train neural network code goes here
+    return 'Neural network trained successfully.'
+
+@app.route('/save')
+def save_model():
+    # Save model code goes here
+    return 'Model saved successfully.'
+
+@app.route('/load')
+def load_model():
+    # Load model code goes here
+    return 'Model loaded successfully.'
+
+@app.route('/test')
+def test_neural_network():
+    # Test neural network code goes here
+    return 'Neural network tested successfully.'
+
+@app.route('/plots')
+def show_plots():
+    # Show training and testing accuracy plots code goes here
+    return '''
+        <h1>Show Training and Testing Accuracy Plots</h1>
+        <p>Code to show training and testing accuracy plots goes here.</p>
+    '''
+
+@app.route('/follow_up')
+def expert_system_qa():
+    # Expert system style Q/A for patient follow-up code goes here
+    return '''
+        <h1>Expert System Q/A for Patient Follow-up</h1>
+        <p>Code for expert system style Q/A for patient follow-up goes here.</p>
+    '''
+
+if __name__ == '__main__':
+    app.run(debug=True, port=8008)
