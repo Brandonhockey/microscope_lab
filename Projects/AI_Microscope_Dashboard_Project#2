@@ -6,7 +6,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from flask import Flask, render_template, request, redirect, url_for
 
-app = Flask(__name__)
+app = Flask('Microscope_Dashboard_Project')
 
 # Home page with instructions/help
 @app.route('/')
@@ -120,3 +120,4 @@ def visualize():
 
 if __name__ == '__main__':
     app.run(port=8008)
+
